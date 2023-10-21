@@ -23,7 +23,7 @@ import keyboard
 import time
 
 # ------------------ПОЛЬЗОВАТЕЛЬСКИЕ ПАРАМЕТРЫ----------------------
-WAIT_TIME = 1  # количество времени (сек) в течении которых нельзя ничего изменять
+WAIT_TIME = 0  # количество времени (сек) в течении которых нельзя ничего изменять
 
 OFSET_IMAGE_AGAIN = (10, 0)  # офсет следующего изображения (0, 0) - будет печатать на предыдущем
 
@@ -166,8 +166,9 @@ elif MID_POS[0] == 0 == MID_POS[1]:
 
     MID_POS = [pyautogui.position().x, pyautogui.position().y]
     print("Центр - " + str(MID_POS))
+    draw_mark()
 
-    pyautogui.moveTo(MID_POS[0], MID_POS[1], duration=0.4)
+pyautogui.moveTo(MID_POS[0], MID_POS[1], duration=0.4)
 
 if TRANS_PIXELS == 0:  # опреляем смещение между соседними пикселями если не указано
     print("В течении 8 секунд наведите курсор в центр пикселя находящийся на 1 ниже чем центральный")
@@ -225,7 +226,7 @@ while not keyboard.is_pressed("Esc"):  # выполняем пока не буд
         executed_now_y += 1
 
         # Переводим курсор на следующую строку
-        last_point[0] -= (len(PICTURE_DROWING[executed_now_y - 1]) - 1) * TRANS_PIXELS
+        last_point[0] -= (len(PICTURE_DROWING[executed_now_y - 1])) * TRANS_PIXELS
         last_point[1] += TRANS_PIXELS
 
         if executed_now_y >= len(PICTURE_DROWING):  # если действия закончились, то давайте заного
@@ -234,7 +235,7 @@ while not keyboard.is_pressed("Esc"):  # выполняем пока не буд
             last_point[0] += OFSET_IMAGE_AGAIN[0] * TRANS_PIXELS
             last_point[1] += OFSET_IMAGE_AGAIN[1] * TRANS_PIXELS
 
-    executed_now_y = 0
+            executed_now_y = 0
 
     # Получаем текущее действие
     exec_color = PICTURE_DROWING[executed_now_y][executed_now_x]
@@ -280,7 +281,8 @@ while not keyboard.is_pressed("Esc"):  # выполняем пока не буд
 
     # Если разрешено проверять цвет, то делаем это
     if COLOR_CHECK_MATCHES:
-        pixColor = pyautogui.screenshot().getpixel(MID_POS if RELATIVE_MOVE else last_point)  # берём цвет пикселя
+        pixColor = pyautogui.screenshot().getpixel((MID_POS[0], MID_POS[1]) if RELATIVE_MOVE else
+                                                   (last_point[0], last_point[1]))  # берём цвет пикселя
         if pixColor == color_now_rgb:  # всё и так норм, пропускаем мут
             continue
         else:  # наконец-то кликаем и разукрашиваем пиксель
@@ -293,4 +295,4 @@ while not keyboard.is_pressed("Esc"):  # выполняем пока не буд
     # ждём прохода мута
     time.sleep(WAIT_TIME)
 
-    print("Выход из программы, спасибо за внимание!")
+print("Выход из программы, спасибо за внимание!")
